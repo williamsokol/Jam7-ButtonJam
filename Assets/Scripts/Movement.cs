@@ -6,14 +6,18 @@ public class Movement : MonoBehaviour
 {
     public Transform bulge;
     public float speed, turnSpeed;
+    public Menu menu;
 
     float angle;
     private Quaternion q;
     private Rigidbody2D rb;
+
+    public static Movement instance;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        instance = this;
         rb = GetComponent<Rigidbody2D>();
         //rb.AddForce(new Vector2(0,100));
     }
@@ -24,11 +28,12 @@ public class Movement : MonoBehaviour
         //if button push move in alinment to bulge
         if(Input.GetButtonDown("button")){
             Move();
-            
+            menu.StartGame();
         }
     }
 
     public void Move(){
+        //print("test");
         rb.velocity = Vector3.zero;
         Vector2 vectorToTarget = transform.position - bulge.position; 
         angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg;
@@ -36,6 +41,9 @@ public class Movement : MonoBehaviour
         
         //transform.rotation =  q;
         rb.AddForce(vectorToTarget * -(speed));
+
+        //playsound
+        Sfx.instance.PlaySound(3);
         
     }
     public void FixedUpdate(){
